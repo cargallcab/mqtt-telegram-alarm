@@ -57,17 +57,7 @@ const validateLastNotification = () => {
     }
 }
 
-//   bot.on('message', (msg) => {
-//       const chatId = msg.chat.id;
-//       if (!MY_CHATS.includes(chatId)) {
-//         MY_CHATS.push(chatId)
-//       }
-  
-//       // send a message to the chat acknowledging receipt of their message
-//       bot.sendMessage(chatId, 'Registered successfully!');
-//   });
-
-  bot.onText(/^register$/i, (msg, match) => {
+bot.onText(/^register$/i, (msg, match) => {
     const chatId = msg.chat.id;
     if (!MY_CHATS.includes(chatId)) {
         MY_CHATS.push(chatId)
@@ -110,13 +100,15 @@ bot.onText(/^battery$/i, (msg, match) => {
 
 bot.onText(/^help$/i, (msg, match) => {
     const chatId = msg.chat.id;
+    
     let rsp = '';
-    rsp += 'arm:\t\t arm alarm system\n' 
-    rsp += 'disarm\t disarm alarm system\n'
-    rsp += 'last\t\t last motion event\n'
-    rsp += 'register\t subscribes to notifications\n'
-    rsp += 'status\t status of alarm system\n'
-    rsp += 'chatid\t returns chat id\n'
-    rsp += 'battery\t returns sensor battery\n'
+    rsp += '**ARM:** arm alarm system\n' 
+    rsp += '**BATTERY:** returns sensor battery\n'
+    rsp += '**CHATID:** returns chat id\n'
+    rsp += '**DISARM:** disarm alarm system\n'
+    rsp += '**LAST:** last motion event\n'
+    rsp += '**REGISTER:** subscribes to notifications\n'
+    rsp += '**STATUS:** status of alarm system\n'
+
     bot.sendMessage(chatId, rsp);
 });
