@@ -100,15 +100,15 @@ bot.onText(/^battery$/i, (msg, match) => {
 
 bot.onText(/^help$/i, (msg, match) => {
     const chatId = msg.chat.id;
-    
+
     let rsp = '';
-    rsp += '**ARM:** arm alarm system\n' 
-    rsp += '**BATTERY:** returns sensor battery\n'
-    rsp += '**CHATID:** returns chat id\n'
-    rsp += '**DISARM:** disarm alarm system\n'
-    rsp += '**LAST:** last motion event\n'
-    rsp += '**REGISTER:** subscribes to notifications\n'
-    rsp += '**STATUS:** status of alarm system\n'
+    rsp += '*ARM:* arm alarm system\n' 
+    rsp += '*BATTERY:* returns sensor battery\n'
+    rsp += '*CHATID:* returns chat id\n'
+    rsp += '*DISARM:* disarm alarm system\n'
+    rsp += '*LAST:* last motion event\n'
+    rsp += '*REGISTER:* subscribes to notifications\n'
+    rsp += '*STATUS:* status of alarm system\n'
 
     bot.sendMessage(chatId, rsp);
 });
