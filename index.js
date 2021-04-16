@@ -8,6 +8,7 @@ const bot = new TelegramBot(constants.TOKEN, {polling: true});
 const client  = mqtt.connect(constants.MQTT_SERVER)
 let status = 'DISARMED';
 let battery = '-';
+const messages = [];
 let lastNotification;
  
 client.on('connect', function () {
@@ -27,6 +28,11 @@ client.on('message', function (topic, message) {
       }
   }
 })
+
+bot.on('message', function (message) {
+    // message is Buffer
+    messages.push(message.message_id)
+});
 
 bot.onText(/^last$/i, (msg, match) => {
     const chatId = msg.chat.id;
@@ -69,9 +75,9 @@ bot.onText(/^status$/i, (msg, match) => {
     const chatId = msg.chat.id;
     let rsp;
     if (status === 'ARMED') {
-        rsp = 'ALARM IS ARMED'
+        rsp = 'Alarm is ARMED'
     } else if (status === 'DISARMED') {
-        rsp = 'ALARM IS DISARMED'
+        rsp = 'Alarm is DISARMED'
     }
     bot.sendMessage(chatId, rsp);
 });
@@ -79,13 +85,13 @@ bot.onText(/^status$/i, (msg, match) => {
 bot.onText(/^arm$/i, (msg, match) => {
     const chatId = msg.chat.id;
     status = 'ARMED'
-    bot.sendMessage(chatId, 'ALARM ARMED');
+    bot.sendMessage(chatId, 'Alarm is now ARMED');
 });
 
 bot.onText(/^disarm$/i, (msg, match) => {
     const chatId = msg.chat.id;
     status = 'DISARMED'
-    bot.sendMessage(chatId, 'ALARM DISARMED');
+    bot.sendMessage(chatId, 'Alarm is now DISARMED');
 });
 
 bot.onText(/^chatid$/i, (msg, match) => {
@@ -98,11 +104,25 @@ bot.onText(/^battery$/i, (msg, match) => {
     bot.sendMessage(chatId, battery);
 });
 
+bot.onText(/^clear$/i, (msg, match) => {
+    const chatId = msg.chat.id;
+    deleteChat(chatId);
+});
+
+bot.onText(/^clearall$/i, (msg, match) => {
+    const chatId = msg.chat.id;
+    deleteAllChat(chatId);
+});
+
+bot.onText(/^messages$/i, (msg, match) => {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, JSON.stringify(messages));
+});
+
 bot.onText(/^help$/i, (msg, match) => {
     const chatId = msg.chat.id;
 
-    let rsp =   '' +
-                '*ARM:*`             arm alarm system`\n' +
+    let rsp =   '*ARM:*`             arm alarm system`\n' +
                 '*BATTERY:*`    return sensor battery`\n' +
                 '*CHATID:*`            return chat id`\n' +
                 '*DISARM:*`       disarm alarm system`\n' +
